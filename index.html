@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>claude-ui-prompts — Production-ready UI, one prompt away</title>
+  <meta name="description" content="30+ tested Claude prompts for every UI component. Hero, navbar, pricing, dashboard, SEO/GEO — copy, paste, ship.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #050507;
+      --text: #e6e6eb;
+      --muted: #9a9aa5;
+      --accent: linear-gradient(135deg, #6a5cff, #3f8cff);
+      --accent-solid: #6a5cff;
+      --border: rgba(255,255,255,0.08);
+      --glass: rgba(255,255,255,0.04);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background:
+        radial-gradient(circle at 20% 10%, rgba(90,70,255,0.2), transparent 45%),
+        radial-gradient(circle at 85% 25%, rgba(60,140,255,0.15), transparent 45%),
+        radial-gradient(circle at 50% 80%, rgba(90,70,255,0.08), transparent 50%),
+        var(--bg);
+      color: var(--text);
+      font-family: 'Geist', system-ui, sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ========== HEADER ========== */
+    header {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      padding: 1.2rem 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(5,5,7,0.92), rgba(5,5,7,0));
+      backdrop-filter: blur(14px);
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .logo-icon {
+      width: 28px; height: 28px;
+      border-radius: 7px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      font-size: 0.9rem;
+      color: var(--muted);
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      padding: 0.55rem 1.2rem;
+      border-radius: 999px;
+      background: var(--accent);
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+      box-shadow: 0 0 28px rgba(90,90,255,0.3);
+      transition: 0.25s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .nav-cta:hover { transform: scale(1.04); box-shadow: 0 0 36px rgba(90,90,255,0.45); }
+
+    /* ========== HERO ========== */
+    .hero {
+      min-height: 100vh;
+      padding: 10rem 8% 6rem;
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      align-items: center;
+      gap: 4rem;
+      overflow: hidden;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(106,92,255,0.35);
+      background: rgba(106,92,255,0.1);
+      font-size: 0.78rem;
+      color: #a89dff;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-badge .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #6a5cff;
+      box-shadow: 0 0 8px #6a5cff;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #ffffff 30%, #8aa0ff 100%);
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin-bottom: 2.5rem;
+      line-height: 1.75;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.6rem;
+      border-radius: 999px;
+      background: var(--accent);
+      color: white;
+      font-weight: 500;
+      font-size: 0.925rem;
+      box-shadow: 0 0 40px rgba(90,90,255,0.35);
+      transition: 0.25s ease;
+    }
+
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(90,90,255,0.5); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--glass);
+      color: var(--text);
+      font-size: 0.925rem;
+      backdrop-filter: blur(8px);
+      transition: 0.25s ease;
+    }
+
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.07); }
+
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero-stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff, #8aa0ff);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+    }
+
+    /* ========== DEMO TERMINAL ========== */
+    .hero-demo {
+      position: relative;
+      perspective: 1200px;
+    }
+
+    .terminal-wrap {
+      transform: rotateX(8deg) rotateY(-14deg) translateY(20px);
+      border-radius: 16px;
+      box-shadow:
+        0 40px 100px rgba(0,0,0,0.7),
+        0 0 80px rgba(90,90,255,0.2);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .terminal-bar {
+      background: #18181f;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .t-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .t-dot.red   { background: #ff5f57; }
+    .t-dot.amber { background: #febc2e; }
+    .t-dot.green { background: #28c840; }
+
+    .terminal-label {
+      margin-left: auto;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .terminal-body {
+      background: #0d0d12;
+      padding: 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      min-height: 420px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated prompt line */
+    .t-line {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.6rem;
+      opacity: 0;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .t-prompt { color: #6a5cff; user-select: none; }
+    .t-user   { color: #e6e6eb; }
+    .t-claude { color: #3f8cff; }
+    .t-code   { color: #52d68a; }
+    .t-comment{ color: #555566; }
+    .t-tag    { color: #ff7eb6; }
+    .t-attr   { color: #febc2e; }
+    .t-string { color: #52d68a; }
+
+    .t-line:nth-child(1)  { animation-delay: 0.2s; }
+    .t-line:nth-child(2)  { animation-delay: 0.5s; }
+    .t-line:nth-child(3)  { animation-delay: 1.2s; }
+    .t-line:nth-child(4)  { animation-delay: 1.6s; }
+    .t-line:nth-child(5)  { animation-delay: 1.9s; }
+    .t-line:nth-child(6)  { animation-delay: 2.2s; }
+    .t-line:nth-child(7)  { animation-delay: 2.5s; }
+    .t-line:nth-child(8)  { animation-delay: 2.8s; }
+    .t-line:nth-child(9)  { animation-delay: 3.1s; }
+    .t-line:nth-child(10) { animation-delay: 3.4s; }
+    .t-line:nth-child(11) { animation-delay: 3.7s; }
+    .t-line:nth-child(12) { animation-delay: 4.0s; }
+    .t-line:nth-child(13) { animation-delay: 4.3s; }
+    .t-line:nth-child(14) { animation-delay: 4.6s; }
+    .t-line:nth-child(15) { animation-delay: 4.9s; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 7px; height: 14px;
+      background: #6a5cff;
+      vertical-align: middle;
+      margin-left: 2px;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .t-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin: 0.8rem 0;
+      opacity: 0;
+      animation: fadeIn 0.3s ease forwards;
+      animation-delay: 1.0s;
+    }
+
+    /* ========== SECTIONS ========== */
+    section { padding: 6rem 8%; }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8a80ff;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #ffffff, #8aa0ff);
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 3.5rem;
+      font-size: 1.05rem;
+    }
+
+    /* ========== CARDS ========== */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.8rem;
+      backdrop-filter: blur(12px);
+      transition: 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      background: radial-gradient(circle at 0% 0%, rgba(106,92,255,0.08), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover { transform: translateY(-5px); border-color: rgba(106,92,255,0.25); }
+    .card:hover::before { opacity: 1; }
+
+    .card-icon {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ========== PROMPTS INDEX ========== */
+    .prompts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .prompt-category {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.4rem;
+      transition: 0.25s ease;
+    }
+
+    .prompt-category:hover {
+      border-color: rgba(106,92,255,0.3);
+      background: rgba(106,92,255,0.06);
+    }
+
+    .prompt-category-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #8a80ff;
+      margin-bottom: 0.6rem;
+    }
+
+    .prompt-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .prompt-list li {
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .prompt-list li::before {
+      content: '→';
+      font-size: 0.7rem;
+      color: #6a5cff;
+    }
+
+    /* ========== PLAN MODE SECTION ========== */
+    .plan-mode-block {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .code-block {
+      background: #0d0d12;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .code-bar {
+      background: #18181f;
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .code-filename {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-left: 0.5rem;
+    }
+
+    .code-body {
+      padding: 1.4rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .code-body .c-comment { color: #444455; }
+    .code-body .c-key     { color: #e6e6eb; }
+    .code-body .c-val     { color: #52d68a; }
+    .code-body .c-head    { color: #8a80ff; }
+    .code-body .c-arrow   { color: #6a5cff; }
+
+    /* ========== GEO SECTION ========== */
+    .geo-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      margin-top: 2rem;
+    }
+
+    .geo-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .geo-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--muted);
+    }
+
+    .geo-table td:first-child { color: var(--text); font-weight: 500; }
+
+    .badge {
+      display: inline-flex;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .badge-seo  { background: rgba(63,140,255,0.15); color: #5ab0ff; }
+    .badge-geo  { background: rgba(106,92,255,0.15); color: #9c8fff; }
+    .badge-both { background: rgba(82,214,138,0.12); color: #52d68a; }
+
+    /* ========== STEPS ========== */
+    .steps {
+      display: grid;
+      gap: 1.5rem;
+      max-width: 640px;
+    }
+
+    .step {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+
+    .step-number {
+      min-width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: white;
+      box-shadow: 0 0 20px rgba(106,92,255,0.3);
+      flex-shrink: 0;
+    }
+
+    .step-content h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .step-content p { font-size: 0.875rem; color: var(--muted); }
+
+    /* ========== FINAL CTA ========== */
+    .final-cta {
+      text-align: center;
+      background: linear-gradient(180deg, rgba(90,90,255,0.12), transparent);
+      border-top: 1px solid var(--border);
+      padding: 8rem 8%;
+    }
+
+    .final-cta h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #ffffff, #8aa0ff);
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .final-cta p {
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      font-size: 1.05rem;
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      padding: 1.8rem 8%;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    footer a:hover { color: var(--text); }
+
+    /* ========== MOBILE ========== */
+    @media (max-width: 768px) {
+      header { padding: 0.9rem 6%; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 8rem 6% 4rem; }
+      .hero-demo { display: none; }
+      .hero h1 { font-size: 2.4rem; }
+      section { padding: 4rem 6%; }
+      .plan-mode-block { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">⌘</div>
+    claude-ui-prompts
+  </div>
+  <nav class="nav">
+    <div class="nav-links">
+      <a href="#prompts">Prompts</a>
+      <a href="#plan-mode">Plan Mode</a>
+      <a href="#seo-geo">SEO/GEO</a>
+    </div>
+    <a href="https://github.com/Gijsw073/claude-ui-prompts" class="nav-cta" target="_blank">
+      ★ Star on GitHub
+    </a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Tested with Claude Sonnet 4.6
+    </div>
+
+    <h1>Production-ready UI,<br><em>one prompt away.</em></h1>
+
+    <p>
+      Copy a tested Claude prompt. Paste it. Get a production-ready
+      Tailwind + Next.js component — no iteration, no cleanup, first draft ships.
+    </p>
+
+    <div class="hero-actions">
+      <a href="https://github.com/Gijsw073/claude-ui-prompts" class="btn-primary" target="_blank">
+        Browse 30+ prompts →
+      </a>
+      <a href="#plan-mode" class="btn-secondary">
+        What is Plan Mode?
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-value">30+</div>
+        <div class="hero-stat-label">Tested prompts</div>
+      </div>
+      <div>
+        <div class="hero-stat-value">7</div>
+        <div class="hero-stat-label">UI categories</div>
+      </div>
+      <div>
+        <div class="hero-stat-value">MIT</div>
+        <div class="hero-stat-label">Free forever</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANIMATED TERMINAL -->
+  <div class="hero-demo">
+    <div class="terminal-wrap">
+      <div class="terminal-bar">
+        <div class="t-dot red"></div>
+        <div class="t-dot amber"></div>
+        <div class="t-dot green"></div>
+        <span class="terminal-label">Claude Code — claude-ui-prompts</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-prompt">›</span><span class="t-user">Copy prompt from sections/landing-page/hero.md</span></div>
+        <div class="t-line"><span class="t-prompt">›</span><span class="t-user">Paste into Claude...</span></div>
+        <hr class="t-divider">
+        <div class="t-line"><span class="t-claude">Claude</span></div>
+        <div class="t-line"><span class="t-comment">// Here's your hero section:</span></div>
+        <div class="t-line"><span class="t-tag">&lt;section</span> <span class="t-attr">className</span>=<span class="t-string">"relative py-32"</span><span class="t-tag">&gt;</span></div>
+        <div class="t-line">&nbsp;&nbsp;<span class="t-tag">&lt;div</span> <span class="t-attr">className</span>=<span class="t-string">"absolute inset-0 bg-[radial-gradient..."</span><span class="t-tag">&gt;</span></div>
+        <div class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-tag">&lt;h1</span> <span class="t-attr">className</span>=<span class="t-string">"text-5xl font-bold tracking-tight"</span><span class="t-tag">&gt;</span></div>
+        <div class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-code">Ship UI faster with</span> <span class="t-tag">&lt;span</span> <span class="t-attr">className</span>=<span class="t-string">"gradient-text"</span><span class="t-tag">&gt;</span></div>
+        <div class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-code">one prompt</span></div>
+        <div class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-tag">&lt;/span&gt;</span></div>
+        <div class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-tag">&lt;/h1&gt;</span></div>
+        <div class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-tag">&lt;p</span> <span class="t-attr">className</span>=<span class="t-string">"mt-6 text-lg text-zinc-500"</span><span class="t-tag">&gt;</span></div>
+        <div class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-code">No iteration. No cleanup.</span></div>
+        <div class="t-line"><span class="t-comment">// ✓ Component ready — 0 edits needed</span><span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S INCLUDED -->
+<section id="prompts">
+  <p class="section-label">What's inside</p>
+  <h2 class="section-title">Every UI section, covered.</h2>
+  <p class="section-sub">
+    Organized by section type. Find the component you need, copy the prompt, ship.
+  </p>
+
+  <div class="prompts-grid">
+    <div class="prompt-category">
+      <div class="prompt-category-label">Landing Page</div>
+      <ul class="prompt-list">
+        <li>Hero section</li>
+        <li>Features grid</li>
+        <li>Pricing cards</li>
+        <li>Testimonials</li>
+        <li>CTA section</li>
+        <li>FAQ accordion</li>
+      </ul>
+    </div>
+    <div class="prompt-category">
+      <div class="prompt-category-label">Navigation</div>
+      <ul class="prompt-list">
+        <li>Navbar (sticky)</li>
+        <li>Sidebar</li>
+        <li>Mobile menu</li>
+        <li>Breadcrumbs</li>
+      </ul>
+    </div>
+    <div class="prompt-category">
+      <div class="prompt-category-label">Headers</div>
+      <ul class="prompt-list">
+        <li>Page header</li>
+        <li>Section header</li>
+        <li>Dashboard header</li>
+      </ul>
+    </div>
+    <div class="prompt-category">
+      <div class="prompt-category-label">Forms</div>
+      <ul class="prompt-list">
+        <li>Login form</li>
+        <li>Sign up form</li>
+        <li>Contact form</li>
+        <li>Newsletter</li>
+      </ul>
+    </div>
+    <div class="prompt-category">
+      <div class="prompt-category-label">Data Display</div>
+      <ul class="prompt-list">
+        <li>Stats cards</li>
+        <li>Data table</li>
+        <li>Timeline</li>
+        <li>Dashboard grid</li>
+      </ul>
+    </div>
+    <div class="prompt-category" style="border-color: rgba(106,92,255,0.3); background: rgba(106,92,255,0.06);">
+      <div class="prompt-category-label" style="color: #9c8fff;">SEO + GEO ✦</div>
+      <ul class="prompt-list">
+        <li>Meta tags</li>
+        <li>Schema.org / JSON-LD</li>
+        <li>Open Graph</li>
+        <li>Dynamic sitemap</li>
+        <li>GEO landing pages</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section>
+  <p class="section-label">Why it works</p>
+  <h2 class="section-title">Built different.</h2>
+  <p class="section-sub">
+    Not a generic prompt list. Every prompt is engineered for Claude's XML comprehension and tested until the output ships clean.
+  </p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h3>First draft ships</h3>
+      <p>Prompts are structured in XML — Claude's native format. Output is production-ready without manual cleanup.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>Plan Mode ready</h3>
+      <p>Every prompt includes a compact CLAUDE.md version. Drop it in your project root, rules apply forever.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌐</div>
+      <h3>SEO + GEO built in</h3>
+      <p>The only prompt library with Generative Engine Optimization — optimize for Perplexity, ChatGPT Search, and Google AI Overviews.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <h3>Always mobile-first</h3>
+      <p>Every prompt spec includes responsive behavior. Dark mode variants baked in by default.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">♿</div>
+      <h3>Accessible by default</h3>
+      <p>ARIA labels, focus traps, keyboard navigation — accessibility requirements are part of every prompt spec.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔓</div>
+      <h3>MIT licensed</h3>
+      <p>Copy, fork, remix. Commercial use allowed. No attribution required. No strings attached.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PLAN MODE -->
+<section id="plan-mode">
+  <div class="plan-mode-block">
+    <div>
+      <p class="section-label">Plan Mode</p>
+      <h2 class="section-title">Write rules once. Claude follows them everywhere.</h2>
+      <p class="section-sub" style="margin-bottom: 2rem;">
+        Drop the included CLAUDE.md template into your project root. Claude reads it on every session and applies your UI rules automatically — no repeating yourself.
+      </p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Copy the template</h3>
+            <p>Grab <code style="font-family: 'DM Mono'; color: #8a80ff; font-size: 0.82rem;">plan-mode/CLAUDE.md</code> from the repo.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Drop it in your project root</h3>
+            <p>Paste your brand color, fonts, and stack details where marked.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Start Claude Code</h3>
+            <p>Claude reads the file and applies your rules to every component it builds, automatically.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-bar">
+        <div class="t-dot red"></div>
+        <div class="t-dot amber"></div>
+        <div class="t-dot green"></div>
+        <span class="code-filename">CLAUDE.md — your project</span>
+      </div>
+      <div class="code-body">
+        <div><span class="c-head"># UI Rules</span></div>
+        <br>
+        <div><span class="c-head">## Stack</span></div>
+        <div><span class="c-arrow">-</span> <span class="c-key">Framework:</span> <span class="c-val">Next.js 14 App Router</span></div>
+        <div><span class="c-arrow">-</span> <span class="c-key">Styling:</span> <span class="c-val">Tailwind CSS</span></div>
+        <div><span class="c-arrow">-</span> <span class="c-key">Language:</span> <span class="c-val">TypeScript</span></div>
+        <br>
+        <div><span class="c-head">## Component Standards</span></div>
+        <div><span class="c-arrow">-</span> Mobile-first responsive</div>
+        <div><span class="c-arrow">-</span> Every interactive element: hover,</div>
+        <div>&nbsp;&nbsp;focus-visible, active states</div>
+        <div><span class="c-arrow">-</span> Semantic HTML always</div>
+        <br>
+        <div><span class="c-head">## SEO Rules</span></div>
+        <div><span class="c-arrow">-</span> Every page exports Metadata</div>
+        <div><span class="c-arrow">-</span> JSON-LD on homepage + blog</div>
+        <div><span class="c-arrow">-</span> Canonical URL always set</div>
+        <br>
+        <div><span class="c-comment"># Claude applies these rules to</span></div>
+        <div><span class="c-comment"># every component it builds.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEO + GEO -->
+<section id="seo-geo" style="background: linear-gradient(180deg, rgba(106,92,255,0.05), transparent);">
+  <p class="section-label">SEO + GEO</p>
+  <h2 class="section-title">Optimize for Google and AI search.</h2>
+  <p class="section-sub">
+    GEO (Generative Engine Optimization) is the emerging discipline of making your content visible to Perplexity, ChatGPT Search, and Google AI Overviews. Most devs don't know it exists yet.
+  </p>
+
+  <table class="geo-table">
+    <thead>
+      <tr>
+        <th>What you get</th>
+        <th>Type</th>
+        <th>Optimizes for</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Next.js metadata export (title, desc, canonical)</td>
+        <td><span class="badge badge-seo">SEO</span></td>
+        <td>Google ranking signals</td>
+      </tr>
+      <tr>
+        <td>Open Graph + dynamic OG image (ImageResponse)</td>
+        <td><span class="badge badge-seo">SEO</span></td>
+        <td>Social share previews</td>
+      </tr>
+      <tr>
+        <td>JSON-LD schema (Article, FAQ, SoftwareApp)</td>
+        <td><span class="badge badge-both">Both</span></td>
+        <td>Rich results + LLM citation</td>
+      </tr>
+      <tr>
+        <td>Dynamic sitemap.ts + robots.ts</td>
+        <td><span class="badge badge-seo">SEO</span></td>
+        <td>Crawl coverage</td>
+      </tr>
+      <tr>
+        <td>GEO-optimized page copy structure</td>
+        <td><span class="badge badge-geo">GEO</span></td>
+        <td>Perplexity / ChatGPT Search</td>
+      </tr>
+      <tr>
+        <td>City/region landing page generator</td>
+        <td><span class="badge badge-geo">GEO</span></td>
+        <td>Local LLM citation</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <h2>Start shipping better UI today.</h2>
+  <p>Free, open source, MIT licensed. No signup. No install.</p>
+  <a href="https://github.com/Gijsw073/claude-ui-prompts" class="btn-primary" target="_blank" style="display: inline-flex; margin: 0 auto;">
+    ★ Star on GitHub →
+  </a>
+</section>
+
+<footer>
+  <span>claude-ui-prompts — MIT License</span>
+  <div style="display: flex; gap: 1.5rem;">
+    <a href="https://github.com/Gijsw073/claude-ui-prompts" target="_blank">GitHub</a>
+    <a href="https://github.com/Gijsw073/claude-ui-prompts/blob/main/sections/seo-geo/README.md" target="_blank">SEO/GEO Guide</a>
+    <a href="https://github.com/Gijsw073/claude-ui-prompts/blob/main/.github/CONTRIBUTING.md" target="_blank">Contributing</a>
+  </div>
+</footer>
+
+</body>
+</html>

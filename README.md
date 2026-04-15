@@ -1,11 +1,13 @@
 # claude-ui-prompts
 
-[![Stars](https://img.shields.io/github/stars/gijswolfert/claude-ui-prompts?style=flat-square)](https://github.com/gijswolfert/claude-ui-prompts/stargazers)
+[![Stars](https://img.shields.io/github/stars/Gijsw073/claude-ui-prompts?style=flat-square)](https://github.com/Gijsw073/claude-ui-prompts/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 [![Tested with Claude](https://img.shields.io/badge/Tested%20with-Claude%20Sonnet%204.6-blueviolet?style=flat-square)](https://claude.ai)
 
 > **Production-ready UI components, one Claude prompt away.**
+
+**[→ View demo site](https://gijsw073.github.io/claude-ui-prompts/)** · **[→ Interactive demo](https://gijsw073.github.io/claude-ui-prompts/demo.html)**
 
 ---
 

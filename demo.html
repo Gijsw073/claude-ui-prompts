@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>claude-ui-prompts — Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #050507;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Geist', system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    .demo-wrap {
+      width: 860px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow:
+        0 40px 100px rgba(0,0,0,0.8),
+        0 0 80px rgba(90,80,255,0.2);
+      background: #0a0a0f;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      background: #141420;
+      padding: 0.8rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot.r { background: #ff5f57; }
+    .dot.a { background: #febc2e; }
+    .dot.g { background: #28c840; }
+
+    .bar-title {
+      margin: 0 auto;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* SPLIT LAYOUT */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 520px;
+    }
+
+    /* LEFT: PROMPT INPUT */
+    .left-panel {
+      border-right: 1px solid rgba(255,255,255,0.07);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .panel-label .source {
+      color: #8a80ff;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .prompt-box {
+      background: #0d0d14;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .prompt-line {
+      opacity: 0;
+      animation: lineIn 0.25s ease forwards;
+    }
+
+    .xml-tag   { color: #ff7eb6; }
+    .xml-attr  { color: #febc2e; }
+    .xml-str   { color: #52d68a; }
+    .xml-body  { color: #c9d0e8; }
+    .xml-comment { color: #444460; }
+
+    .send-btn {
+      margin-top: 1rem;
+      background: linear-gradient(135deg, #6a5cff, #3f8cff);
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      color: white;
+      font-family: 'Geist', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .send-btn.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .send-btn.sent {
+      background: linear-gradient(135deg, #28c840, #52d68a);
+    }
+
+    /* RIGHT: OUTPUT */
+    .right-panel {
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .output-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .claude-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: rgba(63,140,255,0.12);
+      color: #5ab0ff;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .thinking-dots {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      height: 24px;
+      opacity: 0;
+      position: absolute;
+      top: 2.8rem;
+      left: 1.4rem;
+    }
+
+    .thinking-dots span {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #6a5cff;
+      animation: bounce 0.8s ease-in-out infinite;
+    }
+
+    .thinking-dots span:nth-child(2) { animation-delay: 0.15s; }
+    .thinking-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: 0.4; }
+      50% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .output-code {
+      background: #0d0d14;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.75;
+      flex: 1;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .output-code.visible { opacity: 1; }
+
+    .code-line {
+      opacity: 0;
+      animation: lineIn 0.2s ease forwards;
+    }
+
+    .c-tag     { color: #ff7eb6; }
+    .c-attr    { color: #febc2e; }
+    .c-string  { color: #52d68a; }
+    .c-class   { color: #7dd3fc; }
+    .c-comment { color: #444460; }
+    .c-text    { color: #c9d0e8; }
+
+    .success-bar {
+      margin-top: 1rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 8px;
+      background: rgba(40,200,64,0.1);
+      border: 1px solid rgba(40,200,64,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: #52d68a;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: all 0.4s ease;
+    }
+
+    .success-bar.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* BOTTOM STATUS BAR */
+    .status-bar {
+      background: #141420;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 0.5rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.2);
+    }
+
+    .status-right {
+      display: flex;
+      gap: 1.2rem;
+    }
+
+    .status-green { color: #52d68a; }
+    .status-blue  { color: #5ab0ff; }
+
+    @keyframes lineIn {
+      from { opacity: 0; transform: translateX(-4px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* WATERMARK */
+    .watermark {
+      position: absolute;
+      bottom: 1.2rem;
+      right: 1.2rem;
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.12);
+      font-family: 'DM Mono', monospace;
+    }
+  </style>
+</head>
+<body>
+
+<div class="demo-wrap">
+  <div class="top-bar">
+    <div class="dot r"></div>
+    <div class="dot a"></div>
+    <div class="dot g"></div>
+    <span class="bar-title">claude-ui-prompts — demo</span>
+  </div>
+
+  <div class="split">
+    <!-- LEFT PANEL: PROMPT -->
+    <div class="left-panel">
+      <div class="panel-label">
+        Prompt from <span class="source">sections/landing-page/hero.md</span>
+      </div>
+
+      <div class="prompt-box" id="promptBox">
+        <!-- Lines injected by JS -->
+      </div>
+
+      <button class="send-btn" id="sendBtn">
+        ↑ Send to Claude
+      </button>
+    </div>
+
+    <!-- RIGHT PANEL: OUTPUT -->
+    <div class="right-panel">
+      <div class="output-label">
+        <span>Output</span>
+        <span class="claude-badge">✦ Claude Sonnet 4.6</span>
+      </div>
+
+      <div class="thinking-dots" id="thinkingDots">
+        <span></span><span></span><span></span>
+      </div>
+
+      <div class="output-code" id="outputCode">
+        <!-- Lines injected by JS -->
+      </div>
+
+      <div class="success-bar" id="successBar">
+        ✓ Component ready — 0 edits needed
+      </div>
+
+      <div class="watermark">claude-ui-prompts</div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <span id="statusLeft">Ready</span>
+    <div class="status-right">
+      <span class="status-green" id="statusTokens"></span>
+      <span class="status-blue">Next.js · Tailwind · TypeScript</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const promptLines = [
+  ['xml-tag', '&lt;<span class="xml-tag">task</span>&gt;Build a hero section&lt;/<span class="xml-tag">task</span>&gt;'],
+  ['xml-tag', '&lt;<span class="xml-tag">stack</span>&gt;Next.js 14, Tailwind, TypeScript&lt;/<span class="xml-tag">stack</span>&gt;'],
+  ['xml-tag', '&lt;<span class="xml-tag">requirements</span>&gt;'],
+  ['xml-body', '&nbsp;&nbsp;- Gradient headline with h1'],
+  ['xml-body', '&nbsp;&nbsp;- Subtext max 2 lines'],
+  ['xml-body', '&nbsp;&nbsp;- Primary + ghost CTA buttons'],
+  ['xml-body', '&nbsp;&nbsp;- Social proof bar below CTAs'],
+  ['xml-body', '&nbsp;&nbsp;- Mobile-first responsive'],
+  ['xml-tag', '&lt;/<span class="xml-tag">requirements</span>&gt;'],
+  ['xml-tag', '&lt;<span class="xml-tag">style</span>&gt;Linear/Vercel SaaS aesthetic&lt;/<span class="xml-tag">style</span>&gt;'],
+  ['xml-tag', '&lt;<span class="xml-tag">output</span>&gt;Single .tsx, export default HeroSection&lt;/<span class="xml-tag">output</span>&gt;'],
+];
+
+const outputLines = [
+  ['c-comment', '// HeroSection.tsx — generated by Claude'],
+  ['c-text', ''],
+  ['c-tag', 'export default <span class="c-text">function</span> <span class="c-class">HeroSection</span>() {'],
+  ['c-text', '&nbsp;&nbsp;return ('],
+  ['c-tag', '&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="c-tag">section</span> <span class="c-attr">className</span>=<span class="c-string">"relative py-32"</span>&gt;'],
+  ['c-tag', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="c-tag">div</span> <span class="c-attr">className</span>=<span class="c-string">"radial-gradient..."</span> /&gt;'],
+  ['c-tag', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="c-tag">h1</span> <span class="c-attr">className</span>=<span class="c-string">"text-5xl font-bold"</span>&gt;'],
+  ['c-text', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ship UI faster with{" "}'],
+  ['c-tag', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="c-tag">span</span> <span class="c-attr">className</span>=<span class="c-string">"gradient-text"</span>&gt;'],
+  ['c-text', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;one prompt'],
+  ['c-tag', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span class="c-tag">span</span>&gt;'],
+  ['c-tag', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span class="c-tag">h1</span>&gt;'],
+  ['c-tag', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="c-tag">div</span> <span class="c-attr">className</span>=<span class="c-string">"flex gap-4"</span>&gt;'],
+  ['c-tag', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="c-tag">a</span> <span class="c-attr">className</span>=<span class="c-string">"btn-primary"</span>&gt;Get started&lt;/<span class="c-tag">a</span>&gt;'],
+  ['c-tag', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="c-tag">a</span> <span class="c-attr">className</span>=<span class="c-string">"btn-ghost"</span>&gt;View docs&lt;/<span class="c-tag">a</span>&gt;'],
+  ['c-tag', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span class="c-tag">div</span>&gt;'],
+  ['c-comment', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{/* Social proof bar */}'],
+  ['c-tag', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="c-tag">SocialProof</span> <span class="c-attr">count</span>=<span class="c-string">"5,000+"</span> /&gt;'],
+  ['c-tag', '&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span class="c-tag">section</span>&gt;'],
+  ['c-text', '&nbsp;&nbsp;)'],
+  ['c-text', '}'],
+];
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function injectLines(container, lines, startDelay = 0, interval = 80) {
+  await delay(startDelay);
+  for (let i = 0; i < lines.length; i++) {
+    const [cls, html] = lines[i];
+    const div = document.createElement('div');
+    div.className = 'prompt-line';
+    div.innerHTML = html;
+    div.style.animationDelay = `${i * interval}ms`;
+    container.appendChild(div);
+    await delay(interval);
+  }
+}
+
+async function runDemo() {
+  const promptBox = document.getElementById('promptBox');
+  const sendBtn = document.getElementById('sendBtn');
+  const thinkingDots = document.getElementById('thinkingDots');
+  const outputCode = document.getElementById('outputCode');
+  const successBar = document.getElementById('successBar');
+  const statusLeft = document.getElementById('statusLeft');
+  const statusTokens = document.getElementById('statusTokens');
+
+  // Phase 1: type prompt
+  await injectLines(promptBox, promptLines, 300, 90);
+
+  // Phase 2: show send button
+  await delay(400);
+  sendBtn.classList.add('visible');
+
+  // Phase 3: user "clicks" send
+  await delay(900);
+  sendBtn.classList.add('sent');
+  sendBtn.textContent = '✓ Sent';
+  statusLeft.textContent = 'Sending to Claude...';
+
+  // Phase 4: thinking
+  await delay(400);
+  thinkingDots.style.opacity = '1';
+  statusLeft.textContent = 'Claude is thinking...';
+
+  // Phase 5: output appears
+  await delay(1400);
+  thinkingDots.style.opacity = '0';
+  outputCode.classList.add('visible');
+  statusLeft.textContent = 'Generating component...';
+  statusTokens.textContent = '↑ 312 tokens';
+
+  await injectLines(outputCode, outputLines, 0, 65);
+
+  // Phase 6: success
+  await delay(300);
+  successBar.classList.add('visible');
+  statusLeft.textContent = 'Done';
+  statusTokens.textContent = '↕ 312 / 847 tokens';
+
+  // Phase 7: restart loop
+  await delay(4000);
+  promptBox.innerHTML = '';
+  outputCode.innerHTML = '';
+  outputCode.classList.remove('visible');
+  successBar.classList.remove('visible');
+  sendBtn.classList.remove('visible', 'sent');
+  sendBtn.textContent = '↑ Send to Claude';
+  thinkingDots.style.opacity = '0';
+  statusLeft.textContent = 'Ready';
+  statusTokens.textContent = '';
+  await delay(600);
+  runDemo();
+}
+
+runDemo();
+</script>
+</body>
+</html>
